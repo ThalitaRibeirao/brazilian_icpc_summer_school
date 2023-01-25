@@ -1,35 +1,47 @@
-#include <iostream>
-#include <vector>
 #include <bits/stdc++.h>
+typedef long long ll;
 using namespace std;
 
-int main() {
-    long long int  n, m, a, b;
-    long long int i, total = 0, compress = 0;
-    vector<long long int> dif;
 
+int main(){
+    ll n, m, pos;
+    ll i, j, x, y, k, min, vizinho;
+    
     cin >> n >> m;
+    vector<vector<ll>> res(n);
+    vector<ll> police(n), police_final(n), aux;
 
+    min = n;
 
+    for(i = 0; i < m; i++){
+        cin >> x >> y;
+        res[x-1].push_back(y-1);
+        res[y-1].push_back(x-1);
+    }
     for(i = 0; i < n; i++){
-        cin >> a >> b;
-        dif.push_back(a - b);
-        total += a;
-    }
+        for(j = 0; j < n; j++) police[j] = j != i && find(res[i].begin(), res[i].end(), j) == res[i].end();
 
-    sort(dif.begin(), dif.end());
+        x = 1;
 
-    while(total > m){
-        if(!dif.size()){
-            printf("-1\n");
-            return 0;
+        for(j = 0; j < res[i].size(); j++) {
+            vizinho = 1;
+            aux = res[res[i][j]];
+            
+            for(k = 0; k < aux.size(); k++){
+                if(police[aux[k]]) vizinho = 0; 
+            }
+            if(vizinho){
+                if(++x >= min) break;
+            } 
         }
-        total -= dif.back();
-        dif.pop_back();
-        compress++;        
-    }
-    cout << compress << "\n";
 
+        if(x < min){
+            min = x;
+            for(j = 0; j < n; j++) police_final[j] = police[j];
+            if(x == 1) break;
+        }
+    }
+    for(i = 0; i < police_final.size();i++) cout << police_final[i] << " ";
+    cout << endl;
     return 0;
 }
-
