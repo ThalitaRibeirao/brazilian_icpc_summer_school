@@ -1,100 +1,101 @@
-#include <iostream>
-#include <vector>
 #include <bits/stdc++.h>
-#include <math.h>
 using namespace std;
+vector<long long> res;
+typedef pair<int, long long> resposta;
 
-struct FORMIGA {
-    long long int pos;
-    int dir;
-    int caiu;
-} ant;
 
-long long int resolve(vector<FORMIGA> res, long long int l){
-    long long int tempo = 0;
-    long long int i, j, resolvido;
-    while(1){
-        resolvido = 1;
-        for(i = 0; i < res.size(); i++){
-            cout << "pos: " << res[i].pos << " dir: " << res[i].dir << " caiu: " << res[i].caiu << "\n";
-            if(!res[i].caiu){
-                res[i].pos += res[i].dir;
-                if(res[i].pos < 0 || res[i].pos > l) res[i].caiu = 1;
-                resolvido = 0;
-            }
-        }
-        if (resolvido) break;
-        else{
-            for(i = 0; i < res.size()-1; i++){
-                if(res[i].pos == res[i+1].pos){
-                    res[i].dir *= -1;
-                    res[i+1].dir *= -1;
-                }
-            }
-            tempo ++;
-        }
-    }
-    cout << "> tempo: " << tempo << "\n";
-    return tempo;
+resposta ok (int x, int y, int n, int m){
+    long long antc, antl;
+    long long proxc, proxl;
+    long long atual;
+    resposta retorno;
+    
+    atual = res[x*m + y];
+
+    if(x > 0) antc = res[(x-1)*m + y];
+    else antc = 0;
+
+    if(x < n-1) proxc = res[(x+1)*m + y];
+    else proxc = atual + 1;
+
+    
+    if(y > 0) antl = res[(x*m + y + 1];
+    else antl = 0;
+
+    if(y < m-1) proxl = res[x*m + y - 1];
+    else proxl = atual + 1;
+    
+
+    if(atual < proxl && atual < proxc )
+
+
+    retorno.first = 0;
+
+    return retorno
+
 }
+
+
 
 
 int main(){
-    int cases;
-    long long int l = 0, n = 0;
-    long long int i, j, x, num_res, intervalo;
-    long long int min = 0, max = 0, atual;
-    FORMIGA aux;
-    vector<FORMIGA> res, resaux;
-    cin >> cases;
+    int n, m, total = 0;
+    int i, j;
+    long long aux, atual, anterior, proxc, proxl, antc, antl;
 
-    
-    while(cases){
-        if(res.size()) {
-            res.clear();
+    cin >> n >> m;
+
+    for(i = 0; i < n; i++){
+        for(j = 0; j < m; j++){
+            cin >> aux;
+            res.push_back(aux);
         }
-        if(resaux.size()){
-            resaux.clear();
-        }
-
-
-        cin >> l >> n;
-        num_res = pow(2, n);
-        intervalo = num_res;
-        cout << "chegou aqui\n";
-
-        for(i = 0; i < n; i++){
-            cin >> x;
-            aux.pos = x;
-            aux.caiu = 0;
-
-            intervalo/=2;
-            for(j = 0; j < num_res; j++){
-                if((j/intervalo)%2){
-                    aux.dir = 1;   
-                    res.push_back(aux);
-                }
-                else{
-                    aux.dir = -1;
-                    res.push_back(aux);
-                }
-            }
-        }
-
-        for(i = 0; i <num_res; i++){
-            for(j = 0; j < n; j++) {
-                resaux.push_back(res[i+(num_res*j)]);
-            }
-            
-            atual = resolve(resaux, l);
-            if(atual > max) max = atual;
-            if(atual < min) min = atual;
-            cout<< "\n-----------------------------\n";
-        }
-        cout << min << " " << max << "\n";
-        cases--;
     }
 
+    for(i = 0; i < n; i++){
+        for(j = 0; j < m; j++){
+            atual = res[i*m + j];
+            
+            if(i < n-1) proxl = res[(i+1)*m + j];
+            else proxl = 0;
+            if(j < m-1) proxc = res[(i*m + j + 1)];           
+            else proxc = 0;
+            
+
+
+            if(!atual){
+                if(proxl && proxc) atual = min(proxl, proxc) - 1;
+                else{
+                    if(proxl) atual = proxl-1;
+                    else atual = proxc-1;
+                }
+
+                if(i) antl = res[(i-1)*m + j];
+                else antl = 0;
+                if(j) antc = res[(i*m + j -1)];
+                else antc = 0;
+
+                if(atual > antl && atual > antc) total += atual;
+                else {
+                    cout << "-1"<< endl;
+                    return 0;
+                }
+            }
+            else{
+                if((atual >= proxl && proxl) || (atual >= proxc && proxc)){
+                    cout << "-1" << endl;
+                    return 0;
+                }
+                else total += atual;
+            }
+            cout << atual << " ";
+
+        }
+        cout << endl;
+    }
+    cout << total << endl;
 
     return 0;
 }
+
+
